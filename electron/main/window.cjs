@@ -1,9 +1,12 @@
 const { BrowserWindow, screen } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
-// Detect Vite port từ VITE_PORT env variable (Vite set khi chạy dev)
+// Kiểm tra xem dist folder có tồn tại không (nếu có = production, không có = development)
+const isDev = !fs.existsSync(path.join(__dirname, '../../dist')) || process.env.NODE_ENV === 'development';
+console.log(`App is running in ${isDev ? 'development' : 'production'} mode.`);
+console.log("Running with port:", process.env.VITE_DEV_PORT);
 const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
-const isDev = process.env.NODE_ENV === 'development';
 
 /**
  * Tạo main window

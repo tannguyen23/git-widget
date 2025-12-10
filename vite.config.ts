@@ -2,19 +2,16 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'path'
 
+const devPort = parseInt(process.env.VITE_DEV_PORT || '5173', 10);
+
 // https://vite.dev/config/
 export default defineConfig({
   base: './',
   plugins: [react()],
 
   server: {
-    middlewareMode: false,
-    // Đảm bảo port được log để Electron biết
-    hmr: {
-      protocol: 'http',
-      host: 'localhost',
-      port: 5173,
-    },
+    port: devPort,
+    strictPort: true, // Fail nếu port bị chiếm
   },
 
   resolve: {
