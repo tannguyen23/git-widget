@@ -1,2 +1,9 @@
-// Preload script (nếu cần sử dụng IPC hoặc expose API từ main process)
-// Hiện tại để trống, nhưng phải tồn tại để electron.cjs không bị lỗi
+// Preload script - Expose IPC renderer API to React
+const { ipcRenderer } = require('electron');
+
+// Expose electron API to window object
+window.electron = {
+  ipcRenderer: {
+    invoke: (channel) => ipcRenderer.invoke(channel),
+  },
+};
