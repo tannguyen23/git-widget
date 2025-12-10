@@ -1,13 +1,25 @@
+// =======================================================
+// ✅ SỬA: Tải dotenv ngay sau các require cơ bản
+// =======================================================
+require('dotenv').config();
+
 const { BrowserWindow, screen } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
+// Cổng mặc định nếu VITE_DEV_PORT không tồn tại
+const DEFAULT_PORT = 5173;
+
+// Lấy giá trị port từ process.env (đã được dotenv tải)
+const port = process.env.VITE_DEV_PORT || DEFAULT_PORT;
+
+// Xây dựng URL trực tiếp từ port
+const VITE_DEV_SERVER_URL = `http://localhost:${port}`; 
+
 // Kiểm tra xem dist folder có tồn tại không (nếu có = production, không có = development)
 const isDev = !fs.existsSync(path.join(__dirname, '../../dist')) || process.env.NODE_ENV === 'development';
 console.log(`App is running in ${isDev ? 'development' : 'production'} mode.`);
-console.log("Running with port:", process.env.VITE_DEV_PORT);
-const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
-
+console.log("Running with URL:", VITE_DEV_SERVER_URL);
 /**
  * Tạo main window
  */
@@ -34,8 +46,8 @@ function createWindow() {
 
     webPreferences: {
       // Cấu hình quan trọng cho giao tiếp IPC giữa Electron và React/TSX
-      contextIsolation: false,
-      nodeIntegration: true,
+      contextIsolation: true,
+      nodeIntegration: false,
       preload: path.join(__dirname, '../../preload.js'),
     },
   });

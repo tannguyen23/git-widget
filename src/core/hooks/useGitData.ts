@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 interface GitData {
   currentBranch: string;
+  currentCommitHash: string;
   changes: number;
   toPush: number;
   isLoading: boolean;
@@ -11,6 +12,7 @@ interface GitData {
 export function useGitData(repoPath?: string) {
   const [data, setData] = useState<GitData>({
     currentBranch: '',
+    currentCommitHash: '',
     changes: 0,
     toPush: 0,
     isLoading: true,
@@ -21,9 +23,9 @@ export function useGitData(repoPath?: string) {
     const fetchGitData = async () => {
       try {
         // Gọi IPC handler từ main process
-        const electron = (window as unknown as { electron?: { ipcRenderer?: { invoke: (channel: string) => Promise<unknown> } } }).electron;
-        const result = await electron?.ipcRenderer?.invoke('git:get-data') as GitData & { error?: string } | undefined;
-        
+        // const electron = (window as unknown as { electron?: { ipcRenderer?: { invoke: (channel: string) => Promise<unknown> } } }).electron;
+        // const result = await electron?.ipcRenderer?.invoke('git:get-data') as GitData & { error?: string } | undefined;
+        const result = await window.electron.ipcRenderer.invoke('git:get-data') as GitData & { error?: string };
         if (!result) {
           throw new Error('Electron IPC không khả dụng');
         }
@@ -37,6 +39,7 @@ export function useGitData(repoPath?: string) {
         } else {
           setData({
             currentBranch: result.currentBranch || '',
+            currentCommitHash: result.currentCommitHash || '',
             changes: result.changes || 0,
             toPush: result.toPush || 0,
             isLoading: false,
