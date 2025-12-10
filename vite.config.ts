@@ -7,6 +7,16 @@ export default defineConfig({
   base: './',
   plugins: [react()],
 
+  server: {
+    middlewareMode: false,
+    // Đảm bảo port được log để Electron biết
+    hmr: {
+      protocol: 'http',
+      host: 'localhost',
+      port: 5173,
+    },
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -1,7 +1,8 @@
 const { BrowserWindow, screen } = require('electron');
 const path = require('path');
 
-const VITE_DEV_SERVER_URL = 'http://localhost:5173';
+// Detect Vite port từ VITE_PORT env variable (Vite set khi chạy dev)
+const VITE_DEV_SERVER_URL = process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
 const isDev = process.env.NODE_ENV === 'development';
 
 /**
