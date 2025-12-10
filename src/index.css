@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Thêm đoạn này */
+.draggable {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+body {
+  overflow: hidden; /* Ẩn thanh cuộn thừa */
+  background-color: transparent;
+}
