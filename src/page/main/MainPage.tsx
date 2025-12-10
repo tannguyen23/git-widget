@@ -1,5 +1,5 @@
 import ControlPanel from "@core/components/ControlPanel";
-import Dashboard from "@core/components/Dashboard";
+import Dashboard from "@core/components/dashboard/Dashboard";
 import TitleBar from "@core/components/TitleBar";
 
 export default function MainPage() {
@@ -7,6 +7,6 @@ export default function MainPage() {
     return <div className="flex h-full w-full flex-col">
         <TitleBar />
         <Dashboard />
-        <ControlPanel/>
+        <ControlPanel />
     </div>
 }

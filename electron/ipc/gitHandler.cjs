@@ -13,6 +13,7 @@ async function handleGetGitData() {
     if (!isRepo) {
       return {
         currentBranch: '',
+        currentCommitHash: '',
         changes: 0,
         toPush: 0,
         error: 'Không phải Git repository',
@@ -22,6 +23,9 @@ async function handleGetGitData() {
     // Lấy branch hiện tại
     const branch = await git.revparse(['--abbrev-ref', 'HEAD']);
     const currentBranch = branch.trim();
+
+    const shortHash = await git.revparse(['--short', 'HEAD']);
+    const currentCommitHash = shortHash.trim();
 
     // Lấy số lượng file thay đổi
     const status = await git.status();
@@ -37,10 +41,57 @@ async function handleGetGitData() {
       toPush = 0;
     }
 
-    return { currentBranch, changes, toPush };
+    return { currentBranch, currentCommitHash, changes, toPush };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : 'Lỗi không xác định';
-    return { currentBranch: '', changes: 0, toPush: 0, error: errorMessage };
+    return { currentBranch: '', currentCommitHash: '', changes: 0, toPush: 0, error: errorMessage };
+  }
+}
+
+/**
+ * Thêm tất cả file thay đổi vào staging area (git add .)
+ */
+async function handleStageAll() {
+  try {
+    console.log("Staging all changes...");
+    const git = simpleGit();
+    await git.add('.');
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Thực hiện commit (git commit -m "...")
+ * @param {string} message - Nội dung commit
+ */
+async function handleCommit(event, message) { // Nhận nội dung commit từ Renderer
+  if (!message || message.trim() === '') {
+    return { success: false, error: 'Commit message không được để trống.' };
+  }
+  try {
+    const git = simpleGit();
+    const result = await git.commit(message);
+    return { success: true, commitHash: result.commit };
+  } catch (err) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Đồng bộ hóa (Pull và Push)
+ */
+async function handleSync() {
+  try {
+    const git = simpleGit();
+    // Cố gắng pull trước để cập nhật code mới nhất
+    await git.pull('origin', (await git.revparse(['--abbrev-ref', 'HEAD'])).trim());
+    // Sau đó push
+    await git.push('origin', (await git.revparse(['--abbrev-ref', 'HEAD'])).trim());
+    return { success: true };
+  } catch (err) {
+    return { success: false, error: err.message };
   }
 }
 
@@ -49,6 +100,9 @@ async function handleGetGitData() {
  */
 function registerGitHandlers() {
   ipcMain.handle('git:get-data', handleGetGitData);
+  ipcMain.handle('git:stage-all', handleStageAll);
+  ipcMain.handle('git:commit', handleCommit); // Commit cần message
+  ipcMain.handle('git:sync', handleSync);
 }
 
 module.exports = { registerGitHandlers };
