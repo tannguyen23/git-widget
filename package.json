@@ -6,7 +6,7 @@
   "main": "electron.cjs",
   "scripts": {
     "dev": "vite",
-    "electron-dev": "wait-on tcp:5173 && export NODE_ENV=development && electron .",
+    "electron-dev": "cross-env NODE_ENV=development wait-on tcp:5173 && electron .",
     "start": "concurrently \"npm run dev\" \"npm run electron-dev\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -17,6 +17,7 @@
     "dotenv": "^17.2.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "simple-git": "^3.30.0",
     "wait-on": "^9.0.3"
   },
   "devDependencies": {
@@ -27,6 +28,7 @@
     "@vitejs/plugin-react": "^5.1.1",
     "auto": "^11.3.6",
     "autoprefixer": "^10.4.22",
+    "cross-env": "^10.1.0",
     "electron": "^39.2.6",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
