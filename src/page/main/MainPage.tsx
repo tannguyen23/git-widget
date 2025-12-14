@@ -1,5 +1,5 @@
 import ControlPanel from "@core/components/ControlPanel";
-import Dashboard from "@core/components/dashboard/Dashboard";
+import Dashboard from "@core/components/dashboard";
 import TitleBar from "@core/components/TitleBar";
 
 export default function MainPage() {

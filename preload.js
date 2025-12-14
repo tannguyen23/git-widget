@@ -16,6 +16,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 const VALID_INVOKE_CHANNELS = [
     'git:get-data',    // Lấy dữ liệu Git (đang hoạt động)
     'git:stage-all',   // Stage tất cả file
+    'git:get-file-changes', // Lấy danh sách file thay đổi
     'git:commit',      // Commit
     'git:sync',        // Pull và Push
 ];

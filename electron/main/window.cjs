@@ -28,8 +28,8 @@ function createWindow() {
   const display = screen.getPrimaryDisplay();
 
   // Kích thước widget cố định và vị trí góc trên bên phải
-  const widgetWidth = 500;
-  const widgetHeight = 500;
+  const widgetWidth = 600;
+  const widgetHeight = 800;
   const x = display.bounds.width - widgetWidth - 20; // Cách mép phải 20px
   const y = 50;
 
